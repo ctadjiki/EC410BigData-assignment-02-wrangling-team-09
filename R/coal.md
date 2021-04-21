@@ -1,7 +1,7 @@
 ---
 title: "US coal exports"
 author: "Cyrus Tadjiki & Matt McCoy"
-date: "`r format(Sys.Date(), '%d %B %Y')`"
+date: "21 April 2021"
 output:
   html_document:
     theme: yeti
@@ -12,16 +12,7 @@ output:
     keep_md: true
 ---
 
-```{r setup, include=FALSE}
-## These next lines set the default behaviour for all R chunks in the .Rmd document.
-## I recomend you take a look here: https://rmarkdown.rstudio.com/authoring_rcodechunks.html
-knitr::opts_chunk$set(
-  echo = TRUE, ## Show all R output
-  cache = TRUE, ## Cache the results to increase performance.
-  message = FALSE ## Suppress messages (e.g. about namespace conflicts)
-  ) 
-knitr::opts_chunk$set(cache=TRUE) 
-```
+
 
 ## Preliminaries: 
 
@@ -31,7 +22,8 @@ It's a good idea to load your libraries at the top of the Rmd document so that e
 
 *Hint: I've only added the libraries needed to download and read the data. You'll need to load additional libraries to complete this assignment. Add them here once you discover that you need them.* 
 
-```{r libs, cache=FALSE}
+
+```r
 ## Install the pacman package if necessary
 if (!require("pacman")) install.packages("pacman")
 ## Install other packages using pacman::p_load()
@@ -42,7 +34,8 @@ pacman::p_load(httr, readxl, here, dplyr, janitor, tidyverse)
 
 Use `httr::GET()` to fetch the EIA excel file for us from web. (We'll learn more about `httr`, GET and other HTTP methods when we get to webscraping next week.) 
 
-```{r get}
+
+```r
 # library(here) ## Already loaded
 # library(httr) ## Already loaded
 url = "https://www.eia.gov/coal/archive/coal_historical_exports.xlsx"
@@ -54,7 +47,8 @@ if(!file.exists(here::here("data/coal.xlsx"))) {
 
 Next, we read in the file.
 
-```{r read}
+
+```r
 # library(readxl) Already loaded
 coal = read_excel(here::here("data/coal.xlsx"), skip = 3, na = ".")
 ```
@@ -64,21 +58,41 @@ We are now ready to go.
 ## 1) Clean the column names
 
 The column (i.e. variable) names aren't great: Spacing, uppercase letters, etc. 
-```{r names, dependson=coal}
+
+```r
 names(coal)
+```
+
+```
+##  [1] "Year"                     "Quarter"                 
+##  [3] "Type"                     "Customs District"        
+##  [5] "Coal Origin Country"      "Coal Destination Country"
+##  [7] "Steam Coal"               "Steam Revenue"           
+##  [9] "Metallurgical"            "Metallurgical Revenue"   
+## [11] "Total"                    "Total Revenue"           
+## [13] "Coke"                     "Coke Revenue"
 ```
 
 Clean them. 
 
 *Hint: Use either `gsub()` and regular expressions or, more simply, the `janitor()` package. You will need to install the latter first.*
 
-```{r}
 
+```r
 coal_clean <- coal %>% 
   clean_names()
 
 names(coal_clean)
+```
 
+```
+##  [1] "year"                     "quarter"                 
+##  [3] "type"                     "customs_district"        
+##  [5] "coal_origin_country"      "coal_destination_country"
+##  [7] "steam_coal"               "steam_revenue"           
+##  [9] "metallurgical"            "metallurgical_revenue"   
+## [11] "total"                    "total_revenue"           
+## [13] "coke"                     "coke_revenue"
 ```
 
 
@@ -118,12 +132,12 @@ Fill in the implicit missing values, so that each country has a representative r
 
 ### 4.4 Some more tidying up
 
-In answering the previous question, you _may_ encounter a situation where the data frame contains a quarter --- probably `r gsub("\\.", "q", lubridate::quarter(Sys.Date()-months(3), with_year = TRUE))` --- that is missing total export numbers for *all* countries. Did this happen to you? Filter out the completely missing quarter if so. Also: Why do you think this might have happened? (Please answer the latter question even if it didn't happen to you.) 
+In answering the previous question, you _may_ encounter a situation where the data frame contains a quarter --- probably 2021q1 --- that is missing total export numbers for *all* countries. Did this happen to you? Filter out the completely missing quarter if so. Also: Why do you think this might have happened? (Please answer the latter question even if it didn't happen to you.) 
 
 
 ### 4.5) Culmulative top 10 US coal export destinations
 
-Produce a vector --- call it `coal10_culm` --- of the top 10 top coal destinations over the full `r min(coal[, which(grepl('Year|year', names(coal)))], na.rm=T)`--`r `max(coal[, which(grepl('Year|year', names(coal)))], na.rm=T)` study period. What are they?
+Produce a vector --- call it `coal10_culm` --- of the top 10 top coal destinations over the full 2002--`r `max(coal[, which(grepl('Year|year', names(coal)))], na.rm=T)` study period. What are they?
 
 
 ### 4.6) Recent top 10 US coal export destinations
