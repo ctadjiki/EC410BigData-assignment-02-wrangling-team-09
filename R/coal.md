@@ -114,11 +114,40 @@ Plot the US's total coal exports over time by year ONLY. What secular trends do 
  # by = year
 #]
 
-#coal_clean %>% 
- # filter(coal_origin_county = "United States")
- # group_by(year) %>%
-  #summarise(sum(total, na.rm = T))
+#error goes away when I remove the filter function.
 
+coal_clean %>% 
+  #filter(coal_origin_county = "United States")
+  group_by(year) %>%
+  summarise(sum(total, na.rm = T))  
+```
+
+```
+## # A tibble: 19 x 2
+##     year `sum(total, na.rm = T)`
+##    <dbl>                   <dbl>
+##  1  2002                39601241
+##  2  2003                43013508
+##  3  2004                47997895
+##  4  2005                49942211
+##  5  2006                49647269
+##  6  2007                59163103
+##  7  2008                81519115
+##  8  2009                59096951
+##  9  2010                81715675
+## 10  2011               107258561
+## 11  2012               125745662
+## 12  2013               117659268
+## 13  2014                97256746
+## 14  2015                73957888
+## 15  2016                60271017
+## 16  2017                96945119
+## 17  2018               116244072
+## 18  2019                93764651
+## 19  2020                50006784
+```
+
+```r
 #class(year)
   
 plot<-ggplot(data=coal_clean, aes(x=year, y=total)) +

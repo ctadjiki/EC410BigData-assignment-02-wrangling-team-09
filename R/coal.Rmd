@@ -99,10 +99,13 @@ Plot the US's total coal exports over time by year ONLY. What secular trends do 
  # by = year
 #]
 
-#coal_clean %>% 
- # filter(coal_origin_county = "United States")
- # group_by(year) %>%
-  #summarise(sum(total, na.rm = T))
+#error goes away when I remove the filter function.
+
+coal_clean %>% 
+  #filter(coal_origin_county = "United States")
+  group_by(year) %>%
+  summarise(sum(total, na.rm = T))  
+  
 
 #class(year)
   
