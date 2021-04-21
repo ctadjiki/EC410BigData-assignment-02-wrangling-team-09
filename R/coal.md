@@ -27,7 +27,7 @@ It's a good idea to load your libraries at the top of the Rmd document so that e
 ## Install the pacman package if necessary
 if (!require("pacman")) install.packages("pacman")
 ## Install other packages using pacman::p_load()
-pacman::p_load(httr, readxl, here, dplyr, janitor, tidyverse)
+pacman::p_load(httr, readxl, here, dplyr, janitor, tidyverse, data.table)
 ```
 
 ### Read in the data
@@ -103,6 +103,37 @@ Plot the US's total coal exports over time by year ONLY. What secular trends do 
 *Hints: If you want nicely formatted y-axis label, add `+ scale_y_continuous(labels = scales::comma)` to your `ggplot2` code.*
 
 **Please put your (verbal) answers in bold.**
+
+
+```r
+# I get errors with both of these grouping functions. not sure yet what's wrong.
+
+#coal_clean[
+  #coal_origin_county = "United States",
+ # sum(total, na.rm=T),
+ # by = year
+#]
+
+#coal_clean %>% 
+ # filter(coal_origin_county = "United States")
+ # group_by(year) %>%
+  #summarise(sum(total, na.rm = T))
+
+#class(year)
+  
+plot<-ggplot(data=coal_clean, aes(x=year, y=total)) +
+  geom_bar(stat="identity", fill="steelblue")+
+  theme_minimal()
+plot
+```
+
+```
+## Warning: Removed 1139 rows containing missing values (position_stack).
+```
+
+![](coal_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
+
+
 
 ## 3) Total US coal exports over time (year AND quarter)
 
