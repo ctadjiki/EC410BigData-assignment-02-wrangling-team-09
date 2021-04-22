@@ -168,34 +168,45 @@ plot
 
 
 ```r
-coal_clean %>% 
+#Aggregate quarter year 
+coal_clean2 <- coal_clean %>% unite(date, c("year", "quarter"), sep = "-")
+
+#sum total exports for each year and their respective quarter
+coal_clean2 %>% 
   #filter(coal_origin_county = "United States")
-  group_by(year, quarter) %>%
+  group_by(date) %>%
   summarise(sum(total, na.rm = T))  
 ```
 
 ```
-## # A tibble: 75 x 3
-## # Groups:   year [19]
-##     year quarter `sum(total, na.rm = T)`
-##    <dbl>   <dbl>                   <dbl>
-##  1  2002       1                 9252584
-##  2  2002       2                11042519
-##  3  2002       3                 9256554
-##  4  2002       4                10049584
-##  5  2003       1                 8517778
-##  6  2003       2                11449798
-##  7  2003       3                12093944
-##  8  2003       4                10951988
-##  9  2004       1                 9688063
-## 10  2004       2                15255342
+## # A tibble: 75 x 2
+##    date   `sum(total, na.rm = T)`
+##    <chr>                    <dbl>
+##  1 2002-1                 9252584
+##  2 2002-2                11042519
+##  3 2002-3                 9256554
+##  4 2002-4                10049584
+##  5 2003-1                 8517778
+##  6 2003-2                11449798
+##  7 2003-3                12093944
+##  8 2003-4                10951988
+##  9 2004-1                 9688063
+## 10 2004-2                15255342
 ## # ... with 65 more rows
 ```
 
 ```r
-plot2<-ggplot(data=coal_clean, aes(x=year + quarter, y=total)) +
-  geom_bar(stat="identity", fill="steelblue")+
-  theme_minimal()
+#convert string to date ~ two potential solutions:lubridate and zoo
+#if (!require("lubridate")) install.packages("lubridate")
+#library(lubridate)
+
+#if (!require("zoo")) install.packages("zoo")
+#library(zoo)
+#coal_clean2$year_quarter = as.yearqtr(coal_clean$date,format="%Yq%q")
+
+plot2<-ggplot(data=coal_clean2, aes(x=date, y=total)) +
+  geom_bar(stat="identity", fill="steelblue") +
+  theme_minimal() + scale_y_continuous(labels = scales::comma) + labs(title = "Total U.S. Coal Exports by Year", x = "Year-Quarter", y = "Total Coal Exports (U.S.)")
 plot2
 ```
 

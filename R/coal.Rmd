@@ -121,15 +121,26 @@ plot
 ## 3) Total US coal exports over time (year AND quarter)
 
 ```{r}
-coal_clean %>% 
+#Aggregate quarter year 
+coal_clean2 <- coal_clean %>% unite(date, c("year", "quarter"), sep = "-")
+
+#sum total exports for each year and their respective quarter
+coal_clean2 %>% 
   #filter(coal_origin_county = "United States")
-  group_by(year, quarter) %>%
+  group_by(date) %>%
   summarise(sum(total, na.rm = T))  
 
+#convert string to date ~ two potential solutions:lubridate and zoo
+#if (!require("lubridate")) install.packages("lubridate")
+#library(lubridate)
 
-plot2<-ggplot(data=coal_clean, aes(x=year + quarter, y=total)) +
-  geom_bar(stat="identity", fill="steelblue")+
-  theme_minimal()
+#if (!require("zoo")) install.packages("zoo")
+#library(zoo)
+#coal_clean2$year_quarter = as.yearqtr(coal_clean$date,format="%Yq%q")
+
+plot2<-ggplot(data=coal_clean2, aes(x=date, y=total)) +
+  geom_bar(stat="identity", fill="steelblue") +
+  theme_minimal() + scale_y_continuous(labels = scales::comma) + labs(title = "Total U.S. Coal Exports by Year", x = "Year-Quarter", y = "Total Coal Exports (U.S.)")
 plot2
 ```
 
