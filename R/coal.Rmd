@@ -128,14 +128,30 @@ Now do the same as the above, expect aggregated quarter of year (2001Q1, 2002Q2,
 ## 4) Exports by destination country
 
 ### 4.1) Create a new data frame
-
 Create a new data frame called `coal_country` that aggregates total exports by destination country (and quarter of year). Make sure you print the resulting data frame so that it appears in the knitted R markdown document.
+
+
+```{r}
+#Check this is what he's looking for
+coal_country <- coal_clean %>%
+  arrange(coal_destination_country, year,quarter)
+  head(coal_country)
+```
+
+#Here's just the two colums
+```{r}
+#Additional data set with just the two columns
+coal_country1 <- coal_clean %>%
+  group_by((coal_destination_country))%>%
+  summarise(total = sum(total, na.rm = T))
+  head(coal_country1)
+```
+
 
 
 ### 4.2) Inspect the data frame
 
 It looks like some countries are missing data for a number of years and periods (e.g. Albania). Confirm that this is the case. What do you think is happening here?
-
 
 ### 4.3) Complete the data frame
 
