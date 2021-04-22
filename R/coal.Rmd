@@ -185,6 +185,12 @@ It looks like some countries are missing data for a number of years and periods 
 Fill in the implicit missing values, so that each country has a representative row for every year-quarter time period. In other words, you should modify the data frame so that every destination country has row entries for all possible year-quarter combinations (from 2002Q1 through the most recent quarter). Order your updated data frame by country, year and, quarter. 
 
 *Hints: See `?tidyr::complete()` for some convenience options. Again, don't forget to print `coal_country` after you've updated the data frame so that I can see the results.*
+```{r}
+#tidycomplete
+?tidyr::complete()
+
+#create a 2001Q1,..20XXQ4 df and left join it with coal country later. 
+```
 
 
 ### 4.4 Some more tidying up
