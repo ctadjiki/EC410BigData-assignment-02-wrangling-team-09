@@ -1,7 +1,7 @@
 ---
 title: "US coal exports"
 author: "Cyrus Tadjiki & Matt McCoy"
-date: "21 April 2021"
+date: "22 April 2021"
 output:
   html_document:
     theme: yeti
@@ -152,7 +152,7 @@ coal_clean %>%
   
 plot<-ggplot(data=coal_clean, aes(x=year, y=total)) +
   geom_bar(stat="identity", fill="steelblue")+
-  theme_minimal()
+  theme_minimal() + scale_y_continuous(labels = scales::comma) + labs(title = "Total U.S. Coal Exports by Year", x = "Year", y = "Total Coal Exports (U.S.)") 
 plot
 ```
 
@@ -162,9 +162,49 @@ plot
 
 ![](coal_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
 
-
+**For the first 5 or 6 years there is little to no growth in coal exports, but it doesn't take off until 2008 where coal exports really increase. In 2012 U.S. coal exports peak before slowly decreasing over the next 4 years, and recovering in 2017/2018. It's likely that decreases in exports like in the years following 2012 are due to a decrease in demand for U.S. coal and an increase in demand for coal somewhere else. These trends can also be affected by improved green energy sources and people wanting to reduce carbon emissions due to climate change. We can see the effect that COVID-19 had on US coal exports as the virus was announced at the end of 2019 and much of the pandemic took place in 2020, which is where we see a very large decrease in coal exports from the U.S.**
 
 ## 3) Total US coal exports over time (year AND quarter)
+
+
+```r
+coal_clean %>% 
+  #filter(coal_origin_county = "United States")
+  group_by(year, quarter) %>%
+  summarise(sum(total, na.rm = T))  
+```
+
+```
+## # A tibble: 75 x 3
+## # Groups:   year [19]
+##     year quarter `sum(total, na.rm = T)`
+##    <dbl>   <dbl>                   <dbl>
+##  1  2002       1                 9252584
+##  2  2002       2                11042519
+##  3  2002       3                 9256554
+##  4  2002       4                10049584
+##  5  2003       1                 8517778
+##  6  2003       2                11449798
+##  7  2003       3                12093944
+##  8  2003       4                10951988
+##  9  2004       1                 9688063
+## 10  2004       2                15255342
+## # ... with 65 more rows
+```
+
+```r
+plot2<-ggplot(data=coal_clean, aes(x=year + quarter, y=total)) +
+  geom_bar(stat="identity", fill="steelblue")+
+  theme_minimal()
+plot2
+```
+
+```
+## Warning: Removed 1139 rows containing missing values (position_stack).
+```
+
+![](coal_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
+
 
 Now do the same as the above, expect aggregated quarter of year (2001Q1, 2002Q2, etc.). Do you notice any seasonality that was masked from the yearly averages?
 
