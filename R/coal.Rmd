@@ -140,7 +140,9 @@ coal_clean2 %>%
 
 plot2<-ggplot(data=coal_clean2, aes(x=date, y=total)) +
   geom_bar(stat="identity", fill="steelblue") +
-  theme_minimal() + scale_y_continuous(labels = scales::comma) + labs(title = "Total U.S. Coal Exports by Year", x = "Year-Quarter", y = "Total Coal Exports (U.S.)")
+  theme_minimal() + scale_y_continuous(labels = scales::comma) + 
+  labs(title = "Total U.S. Coal Exports by Year", x = "Year-Quarter", y = "Total Coal Exports (U.S.)") +
+  scale_x_discrete(guide = guide_axis(n.dodge=3, check.overlap = TRUE))
 plot2
 ```
 
@@ -157,15 +159,19 @@ Create a new data frame called `coal_country` that aggregates total exports by d
 
 
 ```{r}
-#Check this is what he's looking for
+#Check this is what he's looking for.
 coal_country <- coal_clean %>%
   arrange(coal_destination_country, year,quarter)
   head(coal_country)
+  
 ```
 
 #Here's just the two colums
 ```{r}
-#Additional data set with just the two columns
+#Additional data set with just the two columns. 
+
+#I think this is the right way, but I think you should use the coal_clean2 df because it has the quarter of year value "date" and include it in the group_by. 
+
 coal_country1 <- coal_clean %>%
   group_by((coal_destination_country))%>%
   summarise(total = sum(total, na.rm = T))
