@@ -1,7 +1,7 @@
 ---
 title: "US coal exports"
 author: "Cyrus Tadjiki & Matt McCoy"
-date: "22 April 2021"
+date: "23 April 2021"
 output:
   html_document:
     theme: yeti
@@ -169,7 +169,7 @@ plot
 
 ```r
 #Aggregate quarter year 
-coal_clean2 <- coal_clean %>% unite(date, c("year", "quarter"), sep = "-")
+coal_clean2 <- coal_clean %>% unite(date, c("year", "quarter"), sep = "Q")
 
 #sum total exports for each year and their respective quarter
 coal_clean2 %>% 
@@ -182,16 +182,16 @@ coal_clean2 %>%
 ## # A tibble: 75 x 2
 ##    date   `sum(total, na.rm = T)`
 ##    <chr>                    <dbl>
-##  1 2002-1                 9252584
-##  2 2002-2                11042519
-##  3 2002-3                 9256554
-##  4 2002-4                10049584
-##  5 2003-1                 8517778
-##  6 2003-2                11449798
-##  7 2003-3                12093944
-##  8 2003-4                10951988
-##  9 2004-1                 9688063
-## 10 2004-2                15255342
+##  1 2002Q1                 9252584
+##  2 2002Q2                11042519
+##  3 2002Q3                 9256554
+##  4 2002Q4                10049584
+##  5 2003Q1                 8517778
+##  6 2003Q2                11449798
+##  7 2003Q3                12093944
+##  8 2003Q4                10951988
+##  9 2004Q1                 9688063
+## 10 2004Q2                15255342
 ## # ... with 65 more rows
 ```
 
@@ -206,7 +206,9 @@ coal_clean2 %>%
 
 plot2<-ggplot(data=coal_clean2, aes(x=date, y=total)) +
   geom_bar(stat="identity", fill="steelblue") +
-  theme_minimal() + scale_y_continuous(labels = scales::comma) + labs(title = "Total U.S. Coal Exports by Year", x = "Year-Quarter", y = "Total Coal Exports (U.S.)")
+  theme_minimal() + scale_y_continuous(labels = scales::comma) + 
+  labs(title = "Total U.S. Coal Exports by Year", x = "Year-Quarter", y = "Total Coal Exports (U.S.)") +
+  scale_x_discrete(guide = guide_axis(n.dodge=3, check.overlap = TRUE))
 plot2
 ```
 
@@ -219,26 +221,85 @@ plot2
 
 Now do the same as the above, expect aggregated quarter of year (2001Q1, 2002Q2, etc.). Do you notice any seasonality that was masked from the yearly averages?
 
+**I noticed that the first quarter typically had the lowest total export of the four quarters in most of the years, and this especially happened to be true early on but doesn't hold as much for the more recent years. There were significant decreases in total exports due to COVID which can really be seen starting at the beginning of 2020, and the second quarter is where we see a large drop in exports which was a four year low.**
+
 *Hint: ggplot2 is going to want you to convert your quarterly data into actual date format before it plots nicely. (i.e. Don't leave it as a string.)*
 
 
 ## 4) Exports by destination country
 
 ### 4.1) Create a new data frame
-
 Create a new data frame called `coal_country` that aggregates total exports by destination country (and quarter of year). Make sure you print the resulting data frame so that it appears in the knitted R markdown document.
+
+
+
+```r
+#Check this is what he's looking for.
+coal_country <- coal_clean %>%
+  arrange(coal_destination_country, year,quarter)
+  head(coal_country)
+```
+
+```
+## # A tibble: 6 x 14
+##    year quarter type    customs_district      coal_origin_cou~ coal_destination~
+##   <dbl>   <dbl> <chr>   <chr>                 <chr>            <chr>            
+## 1  2016       4 Coal E~ Houston-Galveston, TX United States    Albania          
+## 2  2002       1 Coal E~ Houston-Galveston, TX United States    Algeria          
+## 3  2002       1 Coal E~ Norfolk, VA / Mobile~ United States    Algeria          
+## 4  2002       3 Coal E~ Norfolk, VA / Mobile~ United States    Algeria          
+## 5  2002       4 Coal E~ Norfolk, VA / Mobile~ United States    Algeria          
+## 6  2003       1 Coal E~ Norfolk, VA / Mobile~ United States    Algeria          
+## # ... with 8 more variables: steam_coal <dbl>, steam_revenue <dbl>,
+## #   metallurgical <dbl>, metallurgical_revenue <dbl>, total <dbl>,
+## #   total_revenue <dbl>, coke <dbl>, coke_revenue <dbl>
+```
+
+#Here's just the two colums
+
+```r
+#Additional data set with just the two columns. 
+
+#I think this is the right way, but I think you should use the coal_clean2 df because it has the quarter of year value "date" and include it in the group_by. 
+
+coal_country1 <- coal_clean %>%
+  group_by((coal_destination_country))%>%
+  summarise(total = sum(total, na.rm = T))
+  head(coal_country1)
+```
+
+```
+## # A tibble: 6 x 2
+##   `(coal_destination_country)`   total
+##   <chr>                          <dbl>
+## 1 Albania                           74
+## 2 Algeria                      2682655
+## 3 Andorra                            9
+## 4 Angola                         77151
+## 5 Anguilla                          13
+## 6 Antigua and Barbuda              205
+```
+
 
 
 ### 4.2) Inspect the data frame
 
 It looks like some countries are missing data for a number of years and periods (e.g. Albania). Confirm that this is the case. What do you think is happening here?
 
+2016 could be the first year coal was exported to Albania. Many countries could've chosen to invest/not invest in coal for many political and monetary reasons with the U.S. in different time periods. A reason that revenue is NA is it could be negative and then not reported to make their numbers look better to investors. Their revenue could be negative because the could have a negative price e.g. subside to jump start investing in U.S Coal. 2016 is also when President Trump was elected and claimed that he was going to "bring back coal jobs" and start using "cleaner coal" so there could have been free coal given to Albania to jump start this industry again.
 
 ### 4.3) Complete the data frame
 
 Fill in the implicit missing values, so that each country has a representative row for every year-quarter time period. In other words, you should modify the data frame so that every destination country has row entries for all possible year-quarter combinations (from 2002Q1 through the most recent quarter). Order your updated data frame by country, year and, quarter. 
 
 *Hints: See `?tidyr::complete()` for some convenience options. Again, don't forget to print `coal_country` after you've updated the data frame so that I can see the results.*
+
+```r
+#tidycomplete
+?tidyr::complete()
+
+#create a 2001Q1,..20XXQ4 df and left join it with coal country later. 
+```
 
 
 ### 4.4 Some more tidying up
