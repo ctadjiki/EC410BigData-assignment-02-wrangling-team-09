@@ -161,32 +161,24 @@ Create a new data frame called `coal_country` that aggregates total exports by d
 
 
 ```{r}
-#Check this is what he's looking for.
 coal_country <- coal_clean %>%
   arrange(coal_destination_country, year,quarter)
   head(coal_country)
-  
 ```
 
 #Here's just the two colums
 ```{r}
-#Additional data set with just the two columns. 
-
-#I think this is the right way, but I think you should use the coal_clean2 df because it has the quarter of year value "date" and include it in the group_by. 
-
-coal_country1 <- coal_clean %>%
+coal_country_Q4.1 <- coal_clean2 %>%
   group_by((coal_destination_country))%>%
   summarise(total = sum(total, na.rm = T))
-  head(coal_country1)
+  head(coal_country_Q4.1)
 ```
-
-
 
 ### 4.2) Inspect the data frame
 
 It looks like some countries are missing data for a number of years and periods (e.g. Albania). Confirm that this is the case. What do you think is happening here?
 
-2016 could be the first year coal was exported to Albania. Many countries could've chosen to invest/not invest in coal for many political and monetary reasons with the U.S. in different time periods. A reason that revenue is NA is it could be negative and then not reported to make their numbers look better to investors. Their revenue could be negative because the could have a negative price e.g. subside to jump start investing in U.S Coal. 2016 is also when President Trump was elected and claimed that he was going to "bring back coal jobs" and start using "cleaner coal" so there could have been free coal given to Albania to jump start this industry again.
+2016 could be the first and only year coal was exported to Albania. Many countries could've chosen to invest/not invest in coal for many political and monetary reasons with the U.S. in different time periods. A reason that revenue is NA is it could be negative and then not reported to make their numbers look better to investors. Their revenue could be negative because the could have a negative price e.g. subside to jump start investing in U.S Coal. 2016 is also when President Trump was elected and claimed that he was going to "bring back coal jobs" and start using "cleaner coal" so there could have been discounted coal given to Albania to jump start this industry again. The main reason that values are missing is because when there wasn't coal transacted for a Quarter is wasn't recorded instead of recording NA for that quarter. 
 
 ### 4.3) Complete the data frame
 
@@ -194,12 +186,20 @@ Fill in the implicit missing values, so that each country has a representative r
 
 *Hints: See `?tidyr::complete()` for some convenience options. Again, don't forget to print `coal_country` after you've updated the data frame so that I can see the results.*
 ```{r}
-#tidycomplete
-?tidyr::complete()
+#?tidyr::complete()
+#create a 2002Q1,..,2020Q4 df and left join it with coal country later.
+coal_country2 <- coal_clean2 %>%
+  full_join(coal_clean2, date) %>%
+  
+expand(date, .name_repair = "check_unique")
 
-#create a 2001Q1,..20XXQ4 df and left join it with coal country later. 
+coal_country2 <- coal_clean2 %>%
+  complete(coal_clean2, nesting(coal_clean2, date))
 
-#Test
+
+  arrange(coal_destination_country, date)
+  head(coal_country2)
+
 ```
 
 
