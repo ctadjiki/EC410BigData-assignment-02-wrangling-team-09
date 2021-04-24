@@ -195,6 +195,11 @@ coal_country2 <- coal_clean2 %>%
 coal_country <- coal_country %>%  
   complete(year, quarter, fill=list(return, values_fill = 0))
 
+#maybe a solution? -Matt
+coal_country2 <- coal_clean2 %>%  
+  complete(coal_destination_country, date)
+
+
 # coal_country <- coal_country %>%  
 #   pivot_longer(coal_country, names_to = "coal_destination_country", values_to = "year", "quarter")
 # 
