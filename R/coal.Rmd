@@ -191,14 +191,24 @@ Fill in the implicit missing values, so that each country has a representative r
 coal_country2 <- coal_clean2 %>%
   full_join(coal_clean2, date) %>%
   
-expand(date, .name_repair = "check_unique")
+  
+coal_country <- coal_country %>%  
+  complete(year, quarter, fill=list(return, values_fill = 0))
 
-coal_country2 <- coal_clean2 %>%
-  complete(coal_clean2, nesting(coal_clean2, date))
-
-
-  arrange(coal_destination_country, date)
-  head(coal_country2)
+# coal_country <- coal_country %>%  
+#   pivot_longer(coal_country, names_to = "coal_destination_country", values_to = "year", "quarter")
+# 
+# 
+# expand(date, .name_repair = "check_unique")
+# 
+# 
+# 
+# coal_country2 <- coal_clean2 %>%
+#   complete(coal_clean2, nesting(coal_clean2, date))
+# 
+# 
+#   arrange(coal_destination_country, date)
+#   head(coal_country2)
 
 ```
 
