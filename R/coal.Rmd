@@ -208,8 +208,21 @@ This may have occurred because the our data set contained observations from 2002
 
 Produce a vector --- call it `coal10_culm` --- of the top 10 top coal destinations over the full `r min(coal[, which(grepl('Year|year', names(coal)))], na.rm=T)`--`r `max(coal[, which(grepl('Year|year', names(coal)))], na.rm=T)` study period. What are they?
 
+
+Produce a vector --- call it `coal10_culm` --- of the top 10 top coal destinations over the full 2002-2020 study period. What are they?
+
 ```{r}
-#coal10_culm <- 
+#coal10_culm <-
+vec <- coal_country %>% 
+  count(total) %>%
+  pull()
+
+# find what I need to pull
+# maybe coal_destination_country
+  
+#This is top 10 transactions all Canada  
+# coal_country2 <- coal_country[with(coal_country, order(-total)),]
+# coal_country2 <- coal_country2[1:10,]
 ```
 
 
