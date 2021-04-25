@@ -178,6 +178,7 @@ coal_country_Q4.1 <- coal_clean2 %>%
 
 It looks like some countries are missing data for a number of years and periods (e.g. Albania). Confirm that this is the case. What do you think is happening here?
 
+**4.2**   
 2016 could be the first and only year coal was exported to Albania. Many countries could've chosen to invest/not invest in coal for many political and monetary reasons with the U.S. in different time periods. A reason that revenue is NA is it could be negative and then not reported to make their numbers look better to investors. Their revenue could be negative because the could have a negative price e.g. subside to jump start investing in U.S Coal. 2016 is also when President Trump was elected and claimed that he was going to "bring back coal jobs" and start using "cleaner coal" so there could have been discounted coal given to Albania to jump start this industry again. The main reason that values are missing is because when there wasn't coal transacted for a Quarter is wasn't recorded instead of recording NA for that quarter. 
 
 ### 4.3) Complete the data frame
@@ -199,10 +200,18 @@ head(coal_country)
 
 In answering the previous question, you _may_ encounter a situation where the data frame contains a quarter --- probably `r gsub("\\.", "q", lubridate::quarter(Sys.Date()-months(3), with_year = TRUE))` --- that is missing total export numbers for *all* countries. Did this happen to you? Filter out the completely missing quarter if so. Also: Why do you think this might have happened? (Please answer the latter question even if it didn't happen to you.) 
 
+**4.4**  
+This may have occurred because the our data set contained observations from 2002Q1 till 2020Q3. The complete function may have accidentally completed NA for all of Quarter 4 because we have zero observations recorded for the fourth quarter of 2020. 
+
 
 ### 4.5) Culmulative top 10 US coal export destinations
 
 Produce a vector --- call it `coal10_culm` --- of the top 10 top coal destinations over the full `r min(coal[, which(grepl('Year|year', names(coal)))], na.rm=T)`--`r `max(coal[, which(grepl('Year|year', names(coal)))], na.rm=T)` study period. What are they?
+
+```{r}
+#coal10_culm <- 
+```
+
 
 
 ### 4.6) Recent top 10 US coal export destinations
