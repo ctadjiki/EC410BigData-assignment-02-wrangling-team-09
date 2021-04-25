@@ -163,7 +163,7 @@ Create a new data frame called `coal_country` that aggregates total exports by d
 ```{r}
 coal_country_missing_values <- coal_clean %>%
   arrange(coal_destination_country, year,quarter)
-  head(coal_country)
+  head(coal_country_missing_values)
 ```
 
 #Here's just the two colums
