@@ -212,10 +212,17 @@ Produce a vector --- call it `coal10_culm` --- of the top 10 top coal destinatio
 Produce a vector --- call it `coal10_culm` --- of the top 10 top coal destinations over the full 2002-2020 study period. What are they?
 
 ```{r}
+building_vec1 <- coal_country_Q4.1[with(coal_country_Q4.1, order(-total)),][1:10,]
 #coal10_culm <-
-vec <- coal_country %>% 
-  count(total) %>%
-  pull()
+
+
+
+# arrange(desc(total))
+#   count(sum = coal_destination_country)
+# 
+# view(vec)
+
+
 
 # find what I need to pull
 # maybe coal_destination_country
