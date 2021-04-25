@@ -218,23 +218,21 @@ setnames(top_10_cul_dt, old = c("(coal_destination_country)"), new = c("country"
 coal10_culm <- top_10_cul_dt %>% 
   pull(country)
 
-  
-  
-# arrange(desc(total))
-#   count(sum = coal_destination_country)
-# 
-# view(vec)
-
-# find what I need to pull
-# maybe coal_destination_country
-  
-#This is top 10 transactions all Canada  
-# coal_country2 <- coal_country[with(coal_country, order(-total)),]
-# coal_country2 <- coal_country2[1:10,]
+view(coal10_culm)
 ```
 
-
-
+**4.5**  
+The top consuming coal countries are the following...
+1. Canada  
+2. Netherlands  
+3. Brazil  
+4. India  
+5. South Korea (Republic of Korea)  
+6. United Kingdom  
+7. Japan  
+8. Italy  
+9. Germany, Federal Republic  
+10. Mexico  
 ### 4.6) Recent top 10 US coal export destinations
 
 Now do the same, except for most recent period on record (i.e. final quarter in the dataset). Call this vector `coal10_recent` and make sure to print it so that I can see it too. Are there any interesting differences between the two vectors? Apart from any secular trends, what else might explain these differences?
@@ -249,12 +247,27 @@ top_10_rec_dt <- coal_clean2 %>%
 top_10_rec_dt <- top_10_rec_dt[with(top_10_rec_dt, order(-total)),][1:10,]
 setnames(top_10_rec_dt, old = c("(coal_destination_country)"), new = c("country"))
 #Pull country as a vector
-coal10_recent <- coal10_culm <- top_10_cul_dt %>% 
+coal10_recent <- top_10_rec_dt %>% 
                   pull(country)
 
 view(coal10_recent)
 ```
 
+**4.6**  
+The top consuming coal countries are the following...
+1. India  
+2. Brazil  
+3. Netherlands  
+4. Canada  
+5. Japan  
+6. South Korea (Republic of Korea)  
+7. Turkey  
+8. Ukraine  
+9. Dominican Republic  
+10.Austria  
+
+
+The change in top coal consuming countries could've been because of other substitutes of energy becoming more accessible. I didn't notice any major changes. The top 4 remain top 4. I noticed a few European Countries were in the bottom 10 and didn't make the top 10 recent possible due to these large consumptious countries attempting though political power to convert to a more "sustainable" lifestyle. 
 
 ### 4.7) US coal exports over time by country
 
