@@ -212,17 +212,18 @@ Produce a vector --- call it `coal10_culm` --- of the top 10 top coal destinatio
 Produce a vector --- call it `coal10_culm` --- of the top 10 top coal destinations over the full 2002-2020 study period. What are they?
 
 ```{r}
-building_vec1 <- coal_country_Q4.1[with(coal_country_Q4.1, order(-total)),][1:10,]
-#coal10_culm <-
+top_10_cul_dt <- coal_country_Q4.1[with(coal_country_Q4.1, order(-total)),][1:10,]
+setnames(top_10_cul_dt, old = c("(coal_destination_country)"), new = c("country"))
 
+coal10_culm <- top_10_cul_dt %>% 
+  pull(country)
 
-
+  
+  
 # arrange(desc(total))
 #   count(sum = coal_destination_country)
 # 
 # view(vec)
-
-
 
 # find what I need to pull
 # maybe coal_destination_country
@@ -237,6 +238,22 @@ building_vec1 <- coal_country_Q4.1[with(coal_country_Q4.1, order(-total)),][1:10
 ### 4.6) Recent top 10 US coal export destinations
 
 Now do the same, except for most recent period on record (i.e. final quarter in the dataset). Call this vector `coal10_recent` and make sure to print it so that I can see it too. Are there any interesting differences between the two vectors? Apart from any secular trends, what else might explain these differences?
+```{r}
+# First I have to filter to just Quater 3 of 2020
+top_10_rec_dt <- coal_clean2 %>%
+                  filter(date=="2020Q3") %>%
+                  group_by((coal_destination_country))%>%
+                  summarise(total = sum(total, na.rm = T))
+                  head(coal_country_Q4.1)
+# Then reorder them and only show the top ten                  
+top_10_rec_dt <- top_10_rec_dt[with(top_10_rec_dt, order(-total)),][1:10,]
+setnames(top_10_rec_dt, old = c("(coal_destination_country)"), new = c("country"))
+#Pull country as a vector
+coal10_recent <- coal10_culm <- top_10_cul_dt %>% 
+                  pull(country)
+
+view(coal10_recent)
+```
 
 
 ### 4.7) US coal exports over time by country
