@@ -186,7 +186,7 @@ Fill in the implicit missing values, so that each country has a representative r
 
 *Hints: See `?tidyr::complete()` for some convenience options. Again, don't forget to print `coal_country` after you've updated the data frame so that I can see the results.*
 ```{r}
-#?tidyr::complete()
+?tidyr::complete()
 #create a 2002Q1,..,2020Q4 df and left join it with coal country later.
 coal_country2 <- coal_clean2 %>%
   full_join(coal_clean2, date) %>%
@@ -195,25 +195,19 @@ coal_country2 <- coal_clean2 %>%
 coal_country <- coal_country %>%  
   complete(year, quarter, fill=list(return, values_fill = 0))
 
-#maybe a solution? -Matt
-coal_country2 <- coal_clean2 %>%  
-  complete(coal_destination_country, date)
+coal_country <- coal_country %>%
+  expand(coal_country, year, quarter)
+
+expand(date, .name_repair = "check_unique")
 
 
-# coal_country <- coal_country %>%  
-#   pivot_longer(coal_country, names_to = "coal_destination_country", values_to = "year", "quarter")
-# 
-# 
-# expand(date, .name_repair = "check_unique")
-# 
-# 
-# 
-# coal_country2 <- coal_clean2 %>%
-#   complete(coal_clean2, nesting(coal_clean2, date))
-# 
-# 
-#   arrange(coal_destination_country, date)
-#   head(coal_country2)
+
+coal_country2 <- coal_clean2 %>%
+  complete(coal_clean2, nesting(coal_clean2, date))
+
+
+  arrange(coal_destination_country, date)
+  head(coal_country2)
 
 ```
 
