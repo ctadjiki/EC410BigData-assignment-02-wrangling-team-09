@@ -11,7 +11,7 @@
 
 <meta name="author" content="Cyrus Tadjiki &amp; Matt McCoy" />
 
-<meta name="date" content="2021-04-23" />
+<meta name="date" content="2021-04-25" />
 
 <title>US coal exports</title>
 
@@ -321,7 +321,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">US coal exports</h1>
 <h4 class="author">Cyrus Tadjiki &amp; Matt McCoy</h4>
-<h4 class="date">23 April 2021</h4>
+<h4 class="date">25 April 2021</h4>
 
 </div>
 
@@ -478,10 +478,9 @@ div.tocify {
 <div id="create-a-new-data-frame" class="section level3">
 <h3>4.1) Create a new data frame</h3>
 <p>Create a new data frame called <code>coal_country</code> that aggregates total exports by destination country (and quarter of year). Make sure you print the resulting data frame so that it appears in the knitted R markdown document.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Check this is what he&#39;s looking for.</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>coal_country <span class="ot">&lt;-</span> coal_clean <span class="sc">%&gt;%</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(coal_destination_country, year,quarter)</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(coal_country)</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>coal_country_missing_values <span class="ot">&lt;-</span> coal_clean <span class="sc">%&gt;%</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(coal_destination_country, year,quarter)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(coal_country_missing_values)</span></code></pre></div>
 <pre><code>## # A tibble: 6 x 14
 ##    year quarter type    customs_district      coal_origin_cou~ coal_destination~
 ##   &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;                 &lt;chr&gt;            &lt;chr&gt;            
@@ -495,14 +494,10 @@ div.tocify {
 ## #   metallurgical &lt;dbl&gt;, metallurgical_revenue &lt;dbl&gt;, total &lt;dbl&gt;,
 ## #   total_revenue &lt;dbl&gt;, coke &lt;dbl&gt;, coke_revenue &lt;dbl&gt;</code></pre>
 <p>#Here’s just the two colums</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Additional data set with just the two columns. </span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co">#I think this is the right way, but I think you should use the coal_clean2 df because it has the quarter of year value &quot;date&quot; and include it in the group_by. </span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>coal_country1 <span class="ot">&lt;-</span> coal_clean <span class="sc">%&gt;%</span></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>((coal_destination_country))<span class="sc">%&gt;%</span></span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">total =</span> <span class="fu">sum</span>(total, <span class="at">na.rm =</span> T))</span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(coal_country1)</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>coal_country_Q4<span class="fl">.1</span> <span class="ot">&lt;-</span> coal_clean2 <span class="sc">%&gt;%</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>((coal_destination_country))<span class="sc">%&gt;%</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">total =</span> <span class="fu">sum</span>(total, <span class="at">na.rm =</span> T))</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(coal_country_Q4<span class="fl">.1</span>)</span></code></pre></div>
 <pre><code>## # A tibble: 6 x 2
 ##   `(coal_destination_country)`   total
 ##   &lt;chr&gt;                          &lt;dbl&gt;
@@ -516,28 +511,94 @@ div.tocify {
 <div id="inspect-the-data-frame" class="section level3">
 <h3>4.2) Inspect the data frame</h3>
 <p>It looks like some countries are missing data for a number of years and periods (e.g. Albania). Confirm that this is the case. What do you think is happening here?</p>
-<p>2016 could be the first year coal was exported to Albania. Many countries could’ve chosen to invest/not invest in coal for many political and monetary reasons with the U.S. in different time periods. A reason that revenue is NA is it could be negative and then not reported to make their numbers look better to investors. Their revenue could be negative because the could have a negative price e.g. subside to jump start investing in U.S Coal. 2016 is also when President Trump was elected and claimed that he was going to “bring back coal jobs” and start using “cleaner coal” so there could have been free coal given to Albania to jump start this industry again.</p>
+<p><strong>4.2</strong><br />
+2016 could be the first and only year coal was exported to Albania. Many countries could’ve chosen to invest/not invest in coal for many political and monetary reasons with the U.S. in different time periods. A reason that revenue is NA is it could be negative and then not reported to make their numbers look better to investors. Their revenue could be negative because the could have a negative price e.g. subside to jump start investing in U.S Coal. 2016 is also when President Trump was elected and claimed that he was going to “bring back coal jobs” and start using “cleaner coal” so there could have been discounted coal given to Albania to jump start this industry again. The main reason that values are missing is because when there wasn’t coal transacted for a Quarter is wasn’t recorded instead of recording NA for that quarter.</p>
 </div>
 <div id="complete-the-data-frame" class="section level3">
 <h3>4.3) Complete the data frame</h3>
 <p>Fill in the implicit missing values, so that each country has a representative row for every year-quarter time period. In other words, you should modify the data frame so that every destination country has row entries for all possible year-quarter combinations (from 2002Q1 through the most recent quarter). Order your updated data frame by country, year and, quarter.</p>
 <p><em>Hints: See <code>?tidyr::complete()</code> for some convenience options. Again, don’t forget to print <code>coal_country</code> after you’ve updated the data frame so that I can see the results.</em></p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co">#tidycomplete</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>?tidyr<span class="sc">::</span><span class="fu">complete</span>()</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co">#create a 2001Q1,..20XXQ4 df and left join it with coal country later. </span></span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>coal_country <span class="ot">&lt;-</span> coal_clean2 <span class="sc">%&gt;%</span>  </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">complete</span>(coal_destination_country, date)</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(coal_country)</span></code></pre></div>
+<pre><code>## # A tibble: 6 x 13
+##   coal_destination_co~ date  type  customs_district coal_origin_coun~ steam_coal
+##   &lt;chr&gt;                &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;            &lt;chr&gt;                  &lt;dbl&gt;
+## 1 Albania              2002~ &lt;NA&gt;  &lt;NA&gt;             &lt;NA&gt;                      NA
+## 2 Albania              2002~ &lt;NA&gt;  &lt;NA&gt;             &lt;NA&gt;                      NA
+## 3 Albania              2002~ &lt;NA&gt;  &lt;NA&gt;             &lt;NA&gt;                      NA
+## 4 Albania              2002~ &lt;NA&gt;  &lt;NA&gt;             &lt;NA&gt;                      NA
+## 5 Albania              2003~ &lt;NA&gt;  &lt;NA&gt;             &lt;NA&gt;                      NA
+## 6 Albania              2003~ &lt;NA&gt;  &lt;NA&gt;             &lt;NA&gt;                      NA
+## # ... with 7 more variables: steam_revenue &lt;dbl&gt;, metallurgical &lt;dbl&gt;,
+## #   metallurgical_revenue &lt;dbl&gt;, total &lt;dbl&gt;, total_revenue &lt;dbl&gt;, coke &lt;dbl&gt;,
+## #   coke_revenue &lt;dbl&gt;</code></pre>
 </div>
 <div id="some-more-tidying-up" class="section level3">
 <h3>4.4 Some more tidying up</h3>
 <p>In answering the previous question, you <em>may</em> encounter a situation where the data frame contains a quarter — probably 2021q1 — that is missing total export numbers for <em>all</em> countries. Did this happen to you? Filter out the completely missing quarter if so. Also: Why do you think this might have happened? (Please answer the latter question even if it didn’t happen to you.)</p>
+<p><strong>4.4</strong><br />
+This may have occurred because the our data set contained observations from 2002Q1 till 2020Q3. The complete function may have accidentally completed NA for all of Quarter 4 because we have zero observations recorded for the fourth quarter of 2020.</p>
 </div>
 <div id="culmulative-top-10-us-coal-export-destinations" class="section level3">
 <h3>4.5) Culmulative top 10 US coal export destinations</h3>
 <p>Produce a vector — call it <code>coal10_culm</code> — of the top 10 top coal destinations over the full 2002–<code>r</code>max(coal[, which(grepl(‘Year|year’, names(coal)))], na.rm=T)` study period. What are they?</p>
-</div>
-<div id="recent-top-10-us-coal-export-destinations" class="section level3">
-<h3>4.6) Recent top 10 US coal export destinations</h3>
+<p>Produce a vector — call it <code>coal10_culm</code> — of the top 10 top coal destinations over the full 2002-2020 study period. What are they?</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>top_10_cul_dt <span class="ot">&lt;-</span> coal_country_Q4<span class="fl">.1</span>[<span class="fu">with</span>(coal_country_Q4<span class="fl">.1</span>, <span class="fu">order</span>(<span class="sc">-</span>total)),][<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,]</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">setnames</span>(top_10_cul_dt, <span class="at">old =</span> <span class="fu">c</span>(<span class="st">&quot;(coal_destination_country)&quot;</span>), <span class="at">new =</span> <span class="fu">c</span>(<span class="st">&quot;country&quot;</span>))</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>coal10_culm <span class="ot">&lt;-</span> top_10_cul_dt <span class="sc">%&gt;%</span> </span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(country)</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="fu">view</span>(coal10_culm)</span></code></pre></div>
+<p><strong>4.5</strong><br />
+The top consuming coal countries are the following… 1. Canada<br />
+2. Netherlands<br />
+3. Brazil<br />
+4. India<br />
+5. South Korea (Republic of Korea)<br />
+6. United Kingdom<br />
+7. Japan<br />
+8. Italy<br />
+9. Germany, Federal Republic<br />
+10. Mexico<br />
+### 4.6) Recent top 10 US coal export destinations</p>
 <p>Now do the same, except for most recent period on record (i.e. final quarter in the dataset). Call this vector <code>coal10_recent</code> and make sure to print it so that I can see it too. Are there any interesting differences between the two vectors? Apart from any secular trends, what else might explain these differences?</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># First I have to filter to just Quater 3 of 2020</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>top_10_rec_dt <span class="ot">&lt;-</span> coal_clean2 <span class="sc">%&gt;%</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">filter</span>(date<span class="sc">==</span><span class="st">&quot;2020Q3&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">group_by</span>((coal_destination_country))<span class="sc">%&gt;%</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">summarise</span>(<span class="at">total =</span> <span class="fu">sum</span>(total, <span class="at">na.rm =</span> T))</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">head</span>(coal_country_Q4<span class="fl">.1</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 6 x 2
+##   country               total
+##   &lt;chr&gt;                 &lt;dbl&gt;
+## 1 Albania                  74
+## 2 Algeria             2682655
+## 3 Andorra                   9
+## 4 Angola                77151
+## 5 Anguilla                 13
+## 6 Antigua and Barbuda     205</code></pre>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Then reorder them and only show the top ten                  </span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>top_10_rec_dt <span class="ot">&lt;-</span> top_10_rec_dt[<span class="fu">with</span>(top_10_rec_dt, <span class="fu">order</span>(<span class="sc">-</span>total)),][<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,]</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">setnames</span>(top_10_rec_dt, <span class="at">old =</span> <span class="fu">c</span>(<span class="st">&quot;(coal_destination_country)&quot;</span>), <span class="at">new =</span> <span class="fu">c</span>(<span class="st">&quot;country&quot;</span>))</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co">#Pull country as a vector</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>coal10_recent <span class="ot">&lt;-</span> top_10_rec_dt <span class="sc">%&gt;%</span> </span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">pull</span>(country)</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="fu">view</span>(coal10_recent)</span></code></pre></div>
+<p><strong>4.6</strong><br />
+The top consuming coal countries are the following… 1. India<br />
+2. Brazil<br />
+3. Netherlands<br />
+4. Canada<br />
+5. Japan<br />
+6. South Korea (Republic of Korea)<br />
+7. Turkey<br />
+8. Ukraine<br />
+9. Dominican Republic<br />
+10.Austria</p>
+<p>The change in top coal consuming countries could’ve been because of other substitutes of energy becoming more accessible. I didn’t notice any major changes. The top 4 remain top 4. I noticed a few European Countries were in the bottom 10 and didn’t make the top 10 recent possible due to these large consumptious countries attempting though political power to convert to a more “sustainable” lifestyle.</p>
 </div>
 <div id="us-coal-exports-over-time-by-country" class="section level3">
 <h3>4.7) US coal exports over time by country</h3>
@@ -557,6 +618,41 @@ div.tocify {
 <div id="show-me-something-interesting" class="section level2">
 <h2>5) Show me something interesting</h2>
 <p>There’s a lot still to explore with this data set. Your final task is to show me something interesting. Drill down into the data and explain what’s driving the secular trends that we have observed above. Or highlight interesting seasonality within a particular country. Or go back to the original <code>coal</code> data frame and look at exports by customs district, or by coal type. Do we changes or trends there? Etcetera. Etcetera. My only requirement is that you show your work and tell me what you have found.</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>coal_clean <span class="sc">%&gt;%</span> </span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">#filter(coal_origin_county = &quot;United States&quot;)</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year) <span class="sc">%&gt;%</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">sum</span>(total, <span class="at">na.rm =</span> T))  </span></code></pre></div>
+<pre><code>## # A tibble: 19 x 2
+##     year `sum(total, na.rm = T)`
+##    &lt;dbl&gt;                   &lt;dbl&gt;
+##  1  2002                39601241
+##  2  2003                43013508
+##  3  2004                47997895
+##  4  2005                49942211
+##  5  2006                49647269
+##  6  2007                59163103
+##  7  2008                81519115
+##  8  2009                59096951
+##  9  2010                81715675
+## 10  2011               107258561
+## 11  2012               125745662
+## 12  2013               117659268
+## 13  2014                97256746
+## 14  2015                73957888
+## 15  2016                60271017
+## 16  2017                96945119
+## 17  2018               116244072
+## 18  2019                93764651
+## 19  2020                50006784</code></pre>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co">#class(year)</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>plot<span class="ot">&lt;-</span><span class="fu">ggplot</span>(<span class="at">data=</span>coal_clean, <span class="fu">aes</span>(<span class="at">x=</span>year, <span class="at">y=</span>total)) <span class="sc">+</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="at">fill=</span><span class="st">&quot;steelblue&quot;</span>)<span class="sc">+</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span> <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>comma) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Total U.S. Coal Exports by Year&quot;</span>, <span class="at">x =</span> <span class="st">&quot;Year&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Total Coal Exports (U.S.)&quot;</span>) <span class="sc">+</span>  <span class="fu">xlim</span>(<span class="dv">2014</span>, <span class="dv">2020</span>)</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>plot</span></code></pre></div>
+<pre><code>## Warning: Removed 7108 rows containing missing values (position_stack).</code></pre>
+<pre><code>## Warning: Removed 932 rows containing missing values (geom_bar).</code></pre>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
 </div>
 
 

@@ -291,3 +291,21 @@ Create an interactive version of your previous figure.
 ## 5) Show me something interesting
 
 There's a lot still to explore with this data set. Your final task is to show me something interesting. Drill down into the data and explain what's driving the secular trends that we have observed above. Or highlight interesting seasonality within a particular country. Or go back to the original `coal` data frame and look at exports by customs district, or by coal type. Do we changes or trends there? Etcetera. Etcetera. My only requirement is that you show your work and tell me what you have found.
+
+```{r}
+coal_clean %>% 
+  #filter(coal_origin_county = "United States")
+  group_by(year) %>%
+  summarise(sum(total, na.rm = T))  
+  
+
+#class(year)
+  
+plot<-ggplot(data=coal_clean, aes(x=year, y=total)) +
+  geom_bar(stat="identity", fill="steelblue")+
+  theme_minimal() + scale_y_continuous(labels = scales::comma) + labs(title = "Total U.S. Coal Exports by Year", x = "Year", y = "Total Coal Exports (U.S.)") +  xlim(2014, 2020)
+plot
+
+
+```
+
