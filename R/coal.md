@@ -466,17 +466,18 @@ coal_clean %>%
   
 plot3<-ggplot(data=coal_clean, aes(x=year, y=total)) +
   geom_bar(stat="identity", fill="#009E73")+
-  theme_minimal() + scale_y_continuous(labels = scales::comma) + labs(title = "Total U.S. Coal Exports And The 2016 presidential Elections", x = "Year", y = "Total Coal Exports (U.S.)") +  xlim(2013, 2020)
+  theme_minimal() + scale_y_continuous(labels = scales::comma) + labs(title = "Total U.S. Coal Exports and The 2012 & 2016 presidential Elections", x = "Year", y = "Total Coal Exports (U.S.)") + xlim(2012, 2020)
 plot3
 ```
 
 ```
-## Warning: Removed 6468 rows containing missing values (position_stack).
+## Warning: Removed 5775 rows containing missing values (position_stack).
 ```
 
 ```
-## Warning: Removed 979 rows containing missing values (geom_bar).
+## Warning: Removed 1032 rows containing missing values (geom_bar).
 ```
 
 ![](coal_files/figure-html/Figure 3-1.png)<!-- -->
 
+**After the year 2012, which is when President Obama was elected for his second term, Coal consumption began to steadily decline. This was likely an electoral response which led to a decrease in coal mining in the U.S and therefore a decrease in coal exports from the U.S. This decrease in coal production is also being influenced by the decreasing cost of alternative energies like renewable electricity. In 2016, natural gas overtook coal for the first time as the largest source of electricity generation in the United States. If this is true, then why do we see a huge spike in U.S. coal production after 2016? **
