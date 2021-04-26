@@ -160,7 +160,7 @@ plot
 ## Warning: Removed 1139 rows containing missing values (position_stack).
 ```
 
-![](coal_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
+![](coal_files/figure-html/Figure 1-1.png)<!-- -->
 
 **For the first 5 or 6 years there is little to no growth in coal exports, but it doesn't take off until 2008 where coal exports really increase. In 2012 U.S. coal exports peak before slowly decreasing over the next 4 years, and recovering in 2017/2018. It's likely that decreases in exports like in the years following 2012 are due to a decrease in demand for U.S. coal and an increase in demand for coal somewhere else. These trends can also be affected by improved green energy sources and people wanting to reduce carbon emissions due to climate change. We can see the effect that COVID-19 had on US coal exports as the virus was announced at the end of 2019 and much of the pandemic took place in 2020, which is where we see a very large decrease in coal exports from the U.S.**
 
@@ -216,7 +216,7 @@ plot2
 ## Warning: Removed 1139 rows containing missing values (position_stack).
 ```
 
-![](coal_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
+![](coal_files/figure-html/Figure 2-1.png)<!-- -->
 
 
 Now do the same as the above, expect aggregated quarter of year (2001Q1, 2002Q2, etc.). Do you notice any seasonality that was masked from the yearly averages?
@@ -478,5 +478,5 @@ plot3
 ## Warning: Removed 979 rows containing missing values (geom_bar).
 ```
 
-![](coal_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
+![](coal_files/figure-html/Figure 3-1.png)<!-- -->
 

@@ -72,7 +72,7 @@ Clean them.
 
 *Hint: Use either `gsub()` and regular expressions or, more simply, the `janitor()` package. You will need to install the latter first.*
 
-```{r}
+```{r Clean Names}
 
 coal_clean <- coal %>% 
   clean_names()
@@ -90,7 +90,7 @@ Plot the US's total coal exports over time by year ONLY. What secular trends do 
 
 **Please put your (verbal) answers in bold.**
 
-```{r}
+```{r Figure 1}
 # I get errors with both of these grouping functions. not sure yet what's wrong.
 
 #coal_clean[
@@ -120,7 +120,7 @@ plot
 
 ## 3) Total US coal exports over time (year AND quarter)
 
-```{r}
+```{r Figure 2}
 #Aggregate quarter year 
 coal_clean2 <- coal_clean %>% unite(date, c("year", "quarter"), sep = "Q")
 
@@ -161,14 +161,14 @@ Now do the same as the above, expect aggregated quarter of year (2001Q1, 2002Q2,
 Create a new data frame called `coal_country` that aggregates total exports by destination country (and quarter of year). Make sure you print the resulting data frame so that it appears in the knitted R markdown document.
 
 
-```{r}
+```{r Exports by destination}
 coal_country_missing_values <- coal_clean %>%
   arrange(coal_destination_country, year,quarter)
   head(coal_country_missing_values)
 ```
 
 #Here's just the two colums
-```{r}
+```{r Exports by destination 2}
 coal_country_Q4.1 <- coal_clean2 %>%
   group_by((coal_destination_country))%>%
   summarise(total = sum(total, na.rm = T))
@@ -187,12 +187,12 @@ It looks like some countries are missing data for a number of years and periods 
 Fill in the implicit missing values, so that each country has a representative row for every year-quarter time period. In other words, you should modify the data frame so that every destination country has row entries for all possible year-quarter combinations (from 2002Q1 through the most recent quarter). Order your updated data frame by country, year and, quarter. 
 
 *Hints: See `?tidyr::complete()` for some convenience options. Again, don't forget to print `coal_country` after you've updated the data frame so that I can see the results.*
-```{r}
+```{r Fill Missing Dates}
 coal_country <- coal_clean2 %>%  
   complete(coal_destination_country, date)
 ```
 
-```{r}
+```{r Check dates were added}
 head(coal_country)
 ```
 
@@ -212,7 +212,7 @@ Produce a vector --- call it `coal10_culm` --- of the top 10 top coal destinatio
 
 Produce a vector --- call it `coal10_culm` --- of the top 10 top coal destinations over the full 2002-2020 study period. What are they?
 
-```{r}
+```{r Cumulative Top 10}
 top_10_cul_dt <- coal_country_Q4.1[with(coal_country_Q4.1, order(-total)),][1:10,]
 setnames(top_10_cul_dt, old = c("(coal_destination_country)"), new = c("country"))
 
@@ -237,7 +237,7 @@ The top consuming coal countries are the following...
 ### 4.6) Recent top 10 US coal export destinations
 
 Now do the same, except for most recent period on record (i.e. final quarter in the dataset). Call this vector `coal10_recent` and make sure to print it so that I can see it too. Are there any interesting differences between the two vectors? Apart from any secular trends, what else might explain these differences?
-```{r}
+```{r Recent Top 10 Destinations}
 # First I have to filter to just Quater 3 of 2020
 top_10_rec_dt <- coal_clean2 %>%
                   filter(date=="2020Q3") %>%
@@ -293,7 +293,7 @@ Create an interactive version of your previous figure.
 
 There's a lot still to explore with this data set. Your final task is to show me something interesting. Drill down into the data and explain what's driving the secular trends that we have observed above. Or highlight interesting seasonality within a particular country. Or go back to the original `coal` data frame and look at exports by customs district, or by coal type. Do we changes or trends there? Etcetera. Etcetera. My only requirement is that you show your work and tell me what you have found.
 
-```{r}
+```{r Figure 3}
 coal_clean %>% 
   #filter(coal_origin_county = "United States")
   group_by(year) %>%
