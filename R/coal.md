@@ -1,7 +1,7 @@
 ---
 title: "US coal exports"
 author: "Cyrus Tadjiki & Matt McCoy"
-date: "23 April 2021"
+date: "25 April 2021"
 output:
   html_document:
     theme: yeti
@@ -26,6 +26,13 @@ It's a good idea to load your libraries at the top of the Rmd document so that e
 ```r
 ## Install the pacman package if necessary
 if (!require("pacman")) install.packages("pacman")
+```
+
+```
+## Warning: package 'pacman' was built under R version 4.0.5
+```
+
+```r
 ## Install other packages using pacman::p_load()
 pacman::p_load(httr, readxl, here, dplyr, janitor, tidyverse, data.table)
 ```
@@ -234,10 +241,9 @@ Create a new data frame called `coal_country` that aggregates total exports by d
 
 
 ```r
-#Check this is what he's looking for.
-coal_country <- coal_clean %>%
+coal_country_missing_values <- coal_clean %>%
   arrange(coal_destination_country, year,quarter)
-  head(coal_country)
+  head(coal_country_missing_values)
 ```
 
 ```
@@ -258,14 +264,10 @@ coal_country <- coal_clean %>%
 #Here's just the two colums
 
 ```r
-#Additional data set with just the two columns. 
-
-#I think this is the right way, but I think you should use the coal_clean2 df because it has the quarter of year value "date" and include it in the group_by. 
-
-coal_country1 <- coal_clean %>%
+coal_country_Q4.1 <- coal_clean2 %>%
   group_by((coal_destination_country))%>%
   summarise(total = sum(total, na.rm = T))
-  head(coal_country1)
+  head(coal_country_Q4.1)
 ```
 
 ```
@@ -280,13 +282,12 @@ coal_country1 <- coal_clean %>%
 ## 6 Antigua and Barbuda              205
 ```
 
-
-
 ### 4.2) Inspect the data frame
 
 It looks like some countries are missing data for a number of years and periods (e.g. Albania). Confirm that this is the case. What do you think is happening here?
 
-2016 could be the first year coal was exported to Albania. Many countries could've chosen to invest/not invest in coal for many political and monetary reasons with the U.S. in different time periods. A reason that revenue is NA is it could be negative and then not reported to make their numbers look better to investors. Their revenue could be negative because the could have a negative price e.g. subside to jump start investing in U.S Coal. 2016 is also when President Trump was elected and claimed that he was going to "bring back coal jobs" and start using "cleaner coal" so there could have been free coal given to Albania to jump start this industry again.
+**4.2**   
+2016 could be the first and only year coal was exported to Albania. Many countries could've chosen to invest/not invest in coal for many political and monetary reasons with the U.S. in different time periods. A reason that revenue is NA is it could be negative and then not reported to make their numbers look better to investors. Their revenue could be negative because the could have a negative price e.g. subside to jump start investing in U.S Coal. 2016 is also when President Trump was elected and claimed that he was going to "bring back coal jobs" and start using "cleaner coal" so there could have been discounted coal given to Albania to jump start this industry again. The main reason that values are missing is because when there wasn't coal transacted for a Quarter is wasn't recorded instead of recording NA for that quarter. 
 
 ### 4.3) Complete the data frame
 
@@ -295,10 +296,28 @@ Fill in the implicit missing values, so that each country has a representative r
 *Hints: See `?tidyr::complete()` for some convenience options. Again, don't forget to print `coal_country` after you've updated the data frame so that I can see the results.*
 
 ```r
-#tidycomplete
-?tidyr::complete()
+coal_country <- coal_clean2 %>%  
+  complete(coal_destination_country, date)
+```
 
-#create a 2001Q1,..20XXQ4 df and left join it with coal country later. 
+
+```r
+head(coal_country)
+```
+
+```
+## # A tibble: 6 x 13
+##   coal_destination_co~ date  type  customs_district coal_origin_coun~ steam_coal
+##   <chr>                <chr> <chr> <chr>            <chr>                  <dbl>
+## 1 Albania              2002~ <NA>  <NA>             <NA>                      NA
+## 2 Albania              2002~ <NA>  <NA>             <NA>                      NA
+## 3 Albania              2002~ <NA>  <NA>             <NA>                      NA
+## 4 Albania              2002~ <NA>  <NA>             <NA>                      NA
+## 5 Albania              2003~ <NA>  <NA>             <NA>                      NA
+## 6 Albania              2003~ <NA>  <NA>             <NA>                      NA
+## # ... with 7 more variables: steam_revenue <dbl>, metallurgical <dbl>,
+## #   metallurgical_revenue <dbl>, total <dbl>, total_revenue <dbl>, coke <dbl>,
+## #   coke_revenue <dbl>
 ```
 
 
@@ -306,20 +325,113 @@ Fill in the implicit missing values, so that each country has a representative r
 
 In answering the previous question, you _may_ encounter a situation where the data frame contains a quarter --- probably 2021q1 --- that is missing total export numbers for *all* countries. Did this happen to you? Filter out the completely missing quarter if so. Also: Why do you think this might have happened? (Please answer the latter question even if it didn't happen to you.) 
 
+**4.4**  
+This may have occurred because the our data set contained observations from 2002Q1 till 2020Q3. The complete function may have accidentally completed NA for all of Quarter 4 because we have zero observations recorded for the fourth quarter of 2020. 
+
 
 ### 4.5) Culmulative top 10 US coal export destinations
 
 Produce a vector --- call it `coal10_culm` --- of the top 10 top coal destinations over the full 2002--`r `max(coal[, which(grepl('Year|year', names(coal)))], na.rm=T)` study period. What are they?
 
 
+Produce a vector --- call it `coal10_culm` --- of the top 10 top coal destinations over the full 2002-2020 study period. What are they?
+
+
+```r
+top_10_cul_dt <- coal_country_Q4.1[with(coal_country_Q4.1, order(-total)),][1:10,]
+setnames(top_10_cul_dt, old = c("(coal_destination_country)"), new = c("country"))
+
+coal10_culm <- top_10_cul_dt %>% 
+  pull(country)
+
+view(coal10_culm)
+```
+
+**4.5**  
+The top consuming coal countries are the following...
+1. Canada  
+2. Netherlands  
+3. Brazil  
+4. India  
+5. South Korea (Republic of Korea)  
+6. United Kingdom  
+7. Japan  
+8. Italy  
+9. Germany, Federal Republic  
+10. Mexico  
 ### 4.6) Recent top 10 US coal export destinations
 
 Now do the same, except for most recent period on record (i.e. final quarter in the dataset). Call this vector `coal10_recent` and make sure to print it so that I can see it too. Are there any interesting differences between the two vectors? Apart from any secular trends, what else might explain these differences?
 
+```r
+# First I have to filter to just Quater 3 of 2020
+top_10_rec_dt <- coal_clean2 %>%
+                  filter(date=="2020Q3") %>%
+                  group_by((coal_destination_country))%>%
+                  summarise(total = sum(total, na.rm = T))
+                  head(coal_country_Q4.1)
+```
+
+```
+## # A tibble: 6 x 2
+##   country               total
+##   <chr>                 <dbl>
+## 1 Albania                  74
+## 2 Algeria             2682655
+## 3 Andorra                   9
+## 4 Angola                77151
+## 5 Anguilla                 13
+## 6 Antigua and Barbuda     205
+```
+
+```r
+# Then reorder them and only show the top ten                  
+top_10_rec_dt <- top_10_rec_dt[with(top_10_rec_dt, order(-total)),][1:10,]
+setnames(top_10_rec_dt, old = c("(coal_destination_country)"), new = c("country"))
+#Pull country as a vector
+coal10_recent <- top_10_rec_dt %>% 
+                  pull(country)
+
+view(coal10_recent)
+```
+
+**4.6**  
+The top consuming coal countries are the following...
+1. India  
+2. Brazil  
+3. Netherlands  
+4. Canada  
+5. Japan  
+6. South Korea (Republic of Korea)  
+7. Turkey  
+8. Ukraine  
+9. Dominican Republic  
+10.Austria  
+
+
+The change in top coal consuming countries could've been because of other substitutes of energy becoming more accessible. I didn't notice any major changes. The top 4 remain top 4. I noticed a few European Countries were in the bottom 10 and didn't make the top 10 recent possible due to these large consumptious countries attempting though political power to convert to a more "sustainable" lifestyle. 
 
 ### 4.7) US coal exports over time by country
 
 Plot the quarterly coal exports over time, but now disaggregated by country. In particular, highlight the top 10 (cumulative) export destinations and then sum the remaining countries into a combined "Other" category. (In other words, your figure should contain the time series of eleven different countries/categories.)
+
+
+```r
+plot4.7 <-ggplot(coal_clean2) +
+            aes(x=date, y=total, size = total, col = coal_destination_country) +
+            geom_point(stat="identity") +
+            theme_classic() +
+            labs(title = "Top U.S. Coal Exporting Countries by Year", x = "Year", y = "Total Coal Exported") +
+            scale_y_continuous(labels = scales::comma) +
+            scale_x_discrete(guide = guide_axis(n.dodge=3, check.overlap = TRUE))
+plot4.7
+```
+
+```
+## Warning: Removed 1139 rows containing missing values (geom_point).
+```
+
+![](coal_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
 
 
 ### 4.8) Make it pretty
