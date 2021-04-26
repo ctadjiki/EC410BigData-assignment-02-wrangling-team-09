@@ -167,7 +167,7 @@ plot
 ## Warning: Removed 1139 rows containing missing values (position_stack).
 ```
 
-![](coal_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
+![](coal_files/figure-html/Figure 1-1.png)<!-- -->
 
 **For the first 5 or 6 years there is little to no growth in coal exports, but it doesn't take off until 2008 where coal exports really increase. In 2012 U.S. coal exports peak before slowly decreasing over the next 4 years, and recovering in 2017/2018. It's likely that decreases in exports like in the years following 2012 are due to a decrease in demand for U.S. coal and an increase in demand for coal somewhere else. These trends can also be affected by improved green energy sources and people wanting to reduce carbon emissions due to climate change. We can see the effect that COVID-19 had on US coal exports as the virus was announced at the end of 2019 and much of the pandemic took place in 2020, which is where we see a very large decrease in coal exports from the U.S.**
 
@@ -212,7 +212,7 @@ coal_clean2 %>%
 #coal_clean2$year_quarter = as.yearqtr(coal_clean$date,format="%Yq%q")
 
 plot2<-ggplot(data=coal_clean2, aes(x=date, y=total)) +
-  geom_bar(stat="identity", fill="steelblue") +
+  geom_bar(stat="identity", fill="#69b3a2") +
   theme_minimal() + scale_y_continuous(labels = scales::comma) + 
   labs(title = "Total U.S. Coal Exports by Year", x = "Year-Quarter", y = "Total Coal Exports (U.S.)") +
   scale_x_discrete(guide = guide_axis(n.dodge=3, check.overlap = TRUE))
@@ -223,12 +223,13 @@ plot2
 ## Warning: Removed 1139 rows containing missing values (position_stack).
 ```
 
-![](coal_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
+![](coal_files/figure-html/Figure 2-1.png)<!-- -->
 
 
 Now do the same as the above, expect aggregated quarter of year (2001Q1, 2002Q2, etc.). Do you notice any seasonality that was masked from the yearly averages?
 
 **I noticed that the first quarter typically had the lowest total export of the four quarters in most of the years, and this especially happened to be true early on but doesn't hold as much for the more recent years. There were significant decreases in total exports due to COVID which can really be seen starting at the beginning of 2020, and the second quarter is where we see a large drop in exports which was a four year low.**
+
 
 *Hint: ggplot2 is going to want you to convert your quarterly data into actual date format before it plots nicely. (i.e. Don't leave it as a string.)*
 
@@ -451,3 +452,57 @@ Create an interactive version of your previous figure.
 ## 5) Show me something interesting
 
 There's a lot still to explore with this data set. Your final task is to show me something interesting. Drill down into the data and explain what's driving the secular trends that we have observed above. Or highlight interesting seasonality within a particular country. Or go back to the original `coal` data frame and look at exports by customs district, or by coal type. Do we changes or trends there? Etcetera. Etcetera. My only requirement is that you show your work and tell me what you have found.
+
+
+```r
+coal_clean %>% 
+  #filter(coal_origin_county = "United States")
+  group_by(year) %>%
+  summarise(sum(total, na.rm = T))  
+```
+
+```
+## # A tibble: 19 x 2
+##     year `sum(total, na.rm = T)`
+##    <dbl>                   <dbl>
+##  1  2002                39601241
+##  2  2003                43013508
+##  3  2004                47997895
+##  4  2005                49942211
+##  5  2006                49647269
+##  6  2007                59163103
+##  7  2008                81519115
+##  8  2009                59096951
+##  9  2010                81715675
+## 10  2011               107258561
+## 11  2012               125745662
+## 12  2013               117659268
+## 13  2014                97256746
+## 14  2015                73957888
+## 15  2016                60271017
+## 16  2017                96945119
+## 17  2018               116244072
+## 18  2019                93764651
+## 19  2020                50006784
+```
+
+```r
+#class(year)
+  
+plot3<-ggplot(data=coal_clean, aes(x=year, y=total)) +
+  geom_bar(stat="identity", fill="#009E73")+
+  theme_minimal() + scale_y_continuous(labels = scales::comma) + labs(title = "Total U.S. Coal Exports and The 2012 & 2016 presidential Elections", x = "Year", y = "Total Coal Exports (U.S.)") + xlim(2012, 2020)
+plot3
+```
+
+```
+## Warning: Removed 5775 rows containing missing values (position_stack).
+```
+
+```
+## Warning: Removed 1032 rows containing missing values (geom_bar).
+```
+
+![](coal_files/figure-html/Figure 3-1.png)<!-- -->
+
+**After the year 2012, which is when President Obama was elected for his second term, Coal consumption began to steadily decline. This was likely an electoral response which led to a decrease in coal mining in the U.S and therefore a decrease in coal exports from the U.S. This decrease in coal production is also being influenced by the decreasing cost of alternative energies like renewable electricity. In 2016, natural gas overtook coal for the first time as the largest source of electricity generation in the United States. If this is true, then why do we see a huge spike in U.S. coal production after 2016? This spike in coal production/exports was caused by the election of president trump in 2016 who promised to revive the U.S. coal industry upon his election. His attempt at revitalizing the coal industry fell short and only lead to small temporary increases in jobs and production, for U.S. coal exports began to decrease again after a couple years. This 2017 boost in coal exports is also partly due to international market factors beyond Trump's influence. In 2017, U.S. coal demand increased in China, Japan and India when a tropical cyclone disrupted their supply from Australia.**
