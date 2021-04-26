@@ -205,7 +205,7 @@ coal_clean2 %>%
 #coal_clean2$year_quarter = as.yearqtr(coal_clean$date,format="%Yq%q")
 
 plot2<-ggplot(data=coal_clean2, aes(x=date, y=total)) +
-  geom_bar(stat="identity", fill="steelblue") +
+  geom_bar(stat="identity", fill="#69b3a2") +
   theme_minimal() + scale_y_continuous(labels = scales::comma) + 
   labs(title = "Total U.S. Coal Exports by Year", x = "Year-Quarter", y = "Total Coal Exports (U.S.)") +
   scale_x_discrete(guide = guide_axis(n.dodge=3, check.overlap = TRUE))
@@ -222,6 +222,7 @@ plot2
 Now do the same as the above, expect aggregated quarter of year (2001Q1, 2002Q2, etc.). Do you notice any seasonality that was masked from the yearly averages?
 
 **I noticed that the first quarter typically had the lowest total export of the four quarters in most of the years, and this especially happened to be true early on but doesn't hold as much for the more recent years. There were significant decreases in total exports due to COVID which can really be seen starting at the beginning of 2020, and the second quarter is where we see a large drop in exports which was a four year low.**
+
 
 *Hint: ggplot2 is going to want you to convert your quarterly data into actual date format before it plots nicely. (i.e. Don't leave it as a string.)*
 
@@ -464,7 +465,7 @@ coal_clean %>%
 #class(year)
   
 plot3<-ggplot(data=coal_clean, aes(x=year, y=total)) +
-  geom_bar(stat="identity", fill="steelblue")+
+  geom_bar(stat="identity", fill="#009E73")+
   theme_minimal() + scale_y_continuous(labels = scales::comma) + labs(title = "Total U.S. Coal Exports And The 2016 presidential Elections", x = "Year", y = "Total Coal Exports (U.S.)") +  xlim(2013, 2020)
 plot3
 ```
