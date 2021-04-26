@@ -192,7 +192,7 @@ coal_country <- coal_clean2 %>%
 ```
 
 ```{r}
-head(coal_country)
+coal_country
 ```
 
 
@@ -242,7 +242,7 @@ top_10_rec_dt <- coal_clean2 %>%
                   filter(date=="2020Q3") %>%
                   group_by((coal_destination_country))%>%
                   summarise(total = sum(total, na.rm = T))
-                  head(coal_country_Q4.1)
+                  head(top_10_rec_dt)
 # Then reorder them and only show the top ten                  
 top_10_rec_dt <- top_10_rec_dt[with(top_10_rec_dt, order(-total)),][1:10,]
 setnames(top_10_rec_dt, old = c("(coal_destination_country)"), new = c("country"))
@@ -274,41 +274,23 @@ The change in top coal consuming countries could've been because of other substi
 Plot the quarterly coal exports over time, but now disaggregated by country. In particular, highlight the top 10 (cumulative) export destinations and then sum the remaining countries into a combined "Other" category. (In other words, your figure should contain the time series of eleven different countries/categories.)
 
 ```{r}
-ALL_top_10_cul_dt <- coal_country_Q4.1[with(coal_country_Q4.1, order(-total)),][]
-OTHER_top_10_cul_dt <- coal_country_Q4.1[with(coal_country_Q4.1, order(-total)),][11:151,]
+# ALL_top_10_cul_dt <- coal_country_Q4.1[with(coal_country_Q4.1, order(-total)),][]
+# OTHER_top_10_cul_dt <- coal_country_Q4.1[with(coal_country_Q4.1, order(-total)),][11:151,]
 
+other_coal_dt <- coal_clean2 %>%
+  mutate(coal_destination_country = ifelse(coal_destination_country %in% coal10_culm, coal_destination_country, "Other Countries")) %>%
+  group_by(date, coal_destination_country) %>%
+  summarise(total = sum(total, na.rm = T))
 
-
-plot4.7 <-ggplot(coal_clean2) +
-            aes(x=date, y=total, size = total) +
-            geom_bar(stat="identity") +
-            theme_grey() +
+plot4.7 <-ggplot(other_coal_dt) +
+            aes(x=date, y=total, col = coal_destination_country, label = coal_destination_country) +
+            geom_point() +
+            geom_line(stat="identity") +
+            theme_classic() +
             labs(title = "Top U.S. Coal Exporting Countries by Year", x = "Year", y = "Total Coal Exported") +
             scale_y_continuous(labels = scales::comma) +
             scale_x_discrete(guide = guide_axis(n.dodge=3, check.overlap = TRUE))
 plot4.7
-```
-
-```{r}
-test_plot <-
-  
-  
-coal_clean2 %>%
-data_frame(val = coal10_culm) %>%
-  ggplot(., aes(val)) + 
-    geom_bar()
-    
-  ggplot(coal_clean2) +
-              aes(coal10_culm) +
-              geom_point(stat="identity") +
-              theme_classic() +
-              labs(title = "Top U.S. Coal Exporting Countries by Year", x = "Year", y = "Total Coal Exported") +
-              scale_y_continuous(labels = scales::comma) +
-              scale_x_discrete(guide = guide_axis(n.dodge=3, check.overlap = TRUE))
-test_plot
-
-ggplot(mapping = aes(coal10_culm)) +
-geom_boxplot()
 ```
 
 ### 4.8) Make it pretty
