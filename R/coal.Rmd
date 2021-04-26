@@ -220,6 +220,7 @@ coal10_culm <- top_10_cul_dt %>%
   pull(country)
 
 view(coal10_culm)
+#sometimes I ran into some errors and had to tag line 217 and 251
 ```
 
 **4.5**  
@@ -253,6 +254,7 @@ coal10_recent <- top_10_rec_dt %>%
                   pull(country)
 
 view(coal10_recent)
+#sometimes I ran into some errors and had to tag line 217 and 251
 ```
 
 **4.6**  
