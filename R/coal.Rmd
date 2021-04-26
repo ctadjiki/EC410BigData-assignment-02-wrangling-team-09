@@ -35,7 +35,7 @@ It's a good idea to load your libraries at the top of the Rmd document so that e
 ## Install the pacman package if necessary
 if (!require("pacman")) install.packages("pacman")
 ## Install other packages using pacman::p_load()
-pacman::p_load(httr, readxl, here, dplyr, janitor, tidyverse, data.table)
+pacman::p_load(httr, readxl, here, dplyr, janitor, tidyverse, data.table, scales)
 ```
 
 ### Read in the data
@@ -214,7 +214,7 @@ Produce a vector --- call it `coal10_culm` --- of the top 10 top coal destinatio
 
 ```{r Cumulative Top 10}
 top_10_cul_dt <- coal_country_Q4.1[with(coal_country_Q4.1, order(-total)),][1:10,]
-#setnames(top_10_cul_dt, old = c("(coal_destination_country)"), new = c("country"))
+setnames(top_10_cul_dt, old = c("(coal_destination_country)"), new = c("country"))
 
 coal10_culm <- top_10_cul_dt %>% 
   pull(country)
@@ -289,8 +289,6 @@ plot4.7 <-ggplot(other_coal_dt) +
             geom_point() +
             geom_line(stat="identity") +
             theme_classic() +
-            labs(title = "Top U.S. Coal Exporting Countries by Year", x = "Year", y = "Total Coal Exported") +
-            scale_y_continuous(labels = scales::comma) +
             scale_x_discrete(guide = guide_axis(n.dodge=3, check.overlap = TRUE))
 plot4.7
 ```
@@ -302,11 +300,37 @@ Take your previous plot and add some swag to it. That is, try to make it as visu
 *Hint: You've got loads of options here. If you haven't already done so, consider a more bespoke theme with the `ggthemes`, `hrbrthemes`, or `cowplot` packages. Try out `scale_fill_brewer()` and `scale_colour_brewer()` for a range of interesting colour palettes. Try some transparency effects with `alpha`. Give your axis labels more refined names with the `labs()` layer in ggplot2. While you're at it, you might want to scale (i.e. normalise) your y-variable to get rid of all those zeros. You can shorten any country names to their ISO abbreviation; see `?countrycode::countrycode`. More substantively --- but more complicated --- you might want to re-order your legend (and the plot itself) according to the relative importance of the destination countries. See `?forcats::fct_reorder` or forcats::fct_relevel`.*
 
 
+```{r}
+plot4.8 <-ggplot(other_coal_dt) +
+            aes(x=date, y=total, col = coal_destination_country, label = coal_destination_country) +
+            geom_point() +
+            geom_line(stat="identity") +
+            theme_dark() +
+            labs(title = "Top U.S. Coal Exporting Countries by Year from 2002-2020", x = "Year and Quarter", y = "Total Coal Exported") +
+            theme(legend.position="right", legend.box.background = element_rect(fill="lightblue",
+                                  size=2.5, linetype="solid", 
+                                  colour ="darkblue")) +
+            scale_y_continuous(labels = scales::comma) +
+            scale_fill_brewer(palette = "Set1") +
+            scale_x_discrete(guide = guide_axis(n.dodge=3, check.overlap = TRUE))
+plot4.8
+
+
+
+```
+
+
+
 ### 4.9) Make it interactive
 
 Create an interactive version of your previous figure.
 
 *Hint: Take a look at plotly::ggplotly(), or the gganimate package.*
+
+```{r}
+
+```
+
 
 
 ## 5) Show me something interesting
