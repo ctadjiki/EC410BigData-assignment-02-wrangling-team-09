@@ -35,7 +35,7 @@ It's a good idea to load your libraries at the top of the Rmd document so that e
 ## Install the pacman package if necessary
 if (!require("pacman")) install.packages("pacman")
 ## Install other packages using pacman::p_load()
-pacman::p_load(httr, readxl, here, dplyr, janitor, tidyverse, data.table, scales, gganimate)
+pacman::p_load(httr, readxl, here, dplyr, janitor, tidyverse, data.table, scales, gganimate, gapminder, plotly)
 ```
 
 ### Read in the data
@@ -312,9 +312,6 @@ plot4.8 <-ggplot(other_coal_dt) +
             scale_fill_brewer(palette = "Set1") +
             scale_x_discrete(guide = guide_axis(n.dodge=3, check.overlap = TRUE))
 plot4.8
-
-
-
 ```
 
 
@@ -325,31 +322,52 @@ Create an interactive version of your previous figure.
 
 *Hint: Take a look at plotly::ggplotly(), or the gganimate package.*
 
+#First i'm going to seperate the data
 ```{r}
 animate_dt <- other_coal_dt %>%
-  separate(date, c("year", "quarter"), sep = "Q") %>%
-  mutate(as.numeric(other_coal_dt$year))
-  
-  
-  
-  
+  separate(date, c("year", "quarter"), sep = "Q")
+```
 
-plot4.9 <-ggplot(other_coal_dt) +
+#Plot 4.9
+```{r}
+plot4.9 <-ggplot(animate_dt) +
             aes(x=date, y=total, col = coal_destination_country, label = coal_destination_country) +
             geom_point() +
             geom_line(stat="identity") +
             theme_light() +
             theme(legend.position="right", legend.box.background = element_rect(fill="lightblue", linetype="solid", colour ="darkblue")) +
             scale_y_continuous(labels = scales::comma) +
-            labs(title = "year: {frame_time}", x = 'Year', y = 'Total Coal Exported') +
-            transition_time(year, quarter) +
+            labs(title = 'year: {frame_time}', x = 'year', y = 'total') +
+            transition_date(year) +
             ease_aes('linear')
-            
-            
+
+           
 animate(plot4.9)
 
 ```
 
+```{r}
+fig <- animate_dt %>%
+  plot_ly(
+    x = ~year, 
+    y = ~total, 
+    color = ~coal_destination_country, 
+    frame = ~year, 
+    text = ~'CoalExported', 
+    hoverinfo = "text",
+    type = 'scatter',
+    mode = 'markers'
+  )
+fig <- fig %>% layout(
+    xaxis = list(
+      type = "log"
+    )
+  )
+
+fig
+```
+
+**For this problem I ran into a lot of errors with running animations. A very common one was "Error: along data must either be integer, numeric, POSIXct, Date, difftime, orhms" and "Error in seq.default(range[1], range[2], length.out = nframes) : 'from' must be a finite number" I had no luck with it so I did some pretty random research and threw together fig which isn't very pretty but shows some animation overtime with exportation for coal with different countries labeled. **
 
 
 ## 5) Show me something interesting
