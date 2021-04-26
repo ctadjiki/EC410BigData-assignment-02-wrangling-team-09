@@ -463,18 +463,18 @@ coal_clean %>%
 ```r
 #class(year)
   
-plot<-ggplot(data=coal_clean, aes(x=year, y=total)) +
+plot3<-ggplot(data=coal_clean, aes(x=year, y=total)) +
   geom_bar(stat="identity", fill="steelblue")+
-  theme_minimal() + scale_y_continuous(labels = scales::comma) + labs(title = "Total U.S. Coal Exports by Year", x = "Year", y = "Total Coal Exports (U.S.)") +  xlim(2014, 2020)
-plot
+  theme_minimal() + scale_y_continuous(labels = scales::comma) + labs(title = "Total U.S. Coal Exports And The 2016 presidential Elections", x = "Year", y = "Total Coal Exports (U.S.)") +  xlim(2013, 2020)
+plot3
 ```
 
 ```
-## Warning: Removed 7108 rows containing missing values (position_stack).
+## Warning: Removed 6468 rows containing missing values (position_stack).
 ```
 
 ```
-## Warning: Removed 932 rows containing missing values (geom_bar).
+## Warning: Removed 979 rows containing missing values (geom_bar).
 ```
 
 ![](coal_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
