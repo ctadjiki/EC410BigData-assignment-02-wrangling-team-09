@@ -301,7 +301,7 @@ Take your previous plot and add some swag to it. That is, try to make it as visu
 
 *Hint: You've got loads of options here. If you haven't already done so, consider a more bespoke theme with the `ggthemes`, `hrbrthemes`, or `cowplot` packages. Try out `scale_fill_brewer()` and `scale_colour_brewer()` for a range of interesting colour palettes. Try some transparency effects with `alpha`. Give your axis labels more refined names with the `labs()` layer in ggplot2. While you're at it, you might want to scale (i.e. normalise) your y-variable to get rid of all those zeros. You can shorten any country names to their ISO abbreviation; see `?countrycode::countrycode`. More substantively --- but more complicated --- you might want to re-order your legend (and the plot itself) according to the relative importance of the destination countries. See `?forcats::fct_reorder` or forcats::fct_relevel`.*
 
-
+**GitHub wouldn't run geom_smooth for some reason**
 ```{r}
 plot4.8 <-ggplot(other_coal_dt) +
             aes(x=date, y=total, col = coal_destination_country, label = coal_destination_country) +
@@ -340,11 +340,11 @@ plot4.9 <-ggplot(animate_dt) +
             theme(legend.position="right", legend.box.background = element_rect(fill="lightblue", linetype="solid", colour ="darkblue")) +
             scale_y_continuous(labels = scales::comma) +
             labs(title = 'year: {frame_time}', x = 'year', y = 'total') +
-            transition_date(year) +
+            transition_time(year) +
             ease_aes('linear')
 
            
-animate(plot4.9)
+#animate(plot4.9)
 
 ```
 
