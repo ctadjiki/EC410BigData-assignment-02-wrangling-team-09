@@ -24,3 +24,5 @@ repo
 You should clone this repo using the RStudio Project method that we practiced in class. Then, I want you to open up the `R/coal.Rmd` file where you will find the questions and basic template for providing your answers. You should answer each question by inserting R code chunks (like we practiced in class) in the relevant spaces. Whenever you "knit" this `R/coal.Rmd` file, you will produce the corresponding `R/coal.md` (i.e. Markdown) and `R/coal.html` (i.e. HTML) files, as well as some auxiliary folders. Don't worry about those now; they are just to help speed things up and my template should take care of everything for you.
 
 Last things: Please pay attention when I ask you to comment on your results in addition to coding them up. **And please mark your comment answers in bold so that I can easily identify them.**
+
+GRADE: **B-** Some mistakes here and there, non-rendered images, and 4.8 and 4.9 are missing altogether. 
